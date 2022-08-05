@@ -4,15 +4,18 @@ import {
   FormLabel,
   Input,
   Flex,
-  Box
+  Box,
+  Textarea
 } from "@chakra-ui/react";
-export function EducationalExp() {
+export function PracticalExp() {
   return (
     <Container m={12} maxW="3xl">
-      <FormLabel htmlFor="school">School Name</FormLabel>
-      <Input variant="flushed" id="school" type="text" />
-      <FormLabel htmlFor="study">Title of Study</FormLabel>
+      <FormLabel htmlFor="school">Company Name</FormLabel>
+      <Input variant="flushed" id="company" type="text" />
+      <FormLabel htmlFor="study">Position Title</FormLabel>
       <Input variant="flushed" id="study" type="text" />
+      <FormLabel htmlFor="study">Job Description</FormLabel>
+      <Textarea placeholder="main tasks of your job" />
       <Flex gap={8}>
         <Box flexGrow="1">
           <FormLabel htmlFor="from">From</FormLabel>

@@ -2,6 +2,7 @@ import React from "react";
 import { ChakraProvider, Center, Heading } from "@chakra-ui/react";
 import { GeneralInfo } from "./components/GeneralInfo";
 import { EducationalExp } from "./components/EducationalExp"
+import { PracticalExp } from "./components/PraticalExp";
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
       </Center>
         <GeneralInfo></GeneralInfo>
         <EducationalExp></EducationalExp>
+        <PracticalExp></PracticalExp>
     </ChakraProvider>
   );
 }
