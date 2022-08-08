@@ -7,10 +7,10 @@ import {
   Box,
   Textarea,
 } from "@chakra-ui/react";
-import { type PracticalExpInfo } from "../store";
+import { type PracticalExpInfoTemplate } from "../store";
 interface Props {
   submitState: boolean;
-  storeValues: PracticalExpInfo;
+  storeValues: PracticalExpInfoTemplate;
 }
 export function PracticalExp(props: Props) {
   const [userInputs, setUserInputs] = React.useState({

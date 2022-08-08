@@ -1,22 +1,24 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { Container, Box, FormLabel, Input, Flex } from "@chakra-ui/react";
-import { type UserInfo } from "../store";
+import { type GeneralInfoTemplate } from "../store";
 interface Props {
-  submitState: boolean;
-  storeValues: UserInfo["generalInfo"];
+  submitState: boolean,
+  storeValues: GeneralInfoTemplate,
+  submitInputs: React.Dispatch<React.SetStateAction<GeneralInfoTemplate>>,
 }
 export function GeneralInfo(props: Props) {
-  const [userInputs, setUserInputs] = React.useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-  });
-  const { firstName, lastName, email, phone } = props.storeValues;
+  const [userInputs, setUserInputs] = React.useState({...props.storeValues});
+  const { firstName, lastName, email, phone } = userInputs;
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
+    console.log('handleInputChange')
     setUserInputs((prev) => ({ ...prev, [id]: value }));
   };
+  useEffect(() => {
+    console.log('GeneralInfo useEffect triggered')
+    props.submitInputs(prev => Object.assign(prev, userInputs));
+  }, [props.submitState])
+
   return (
     <Container m={12} maxW="3xl">
       <Flex gap={8}>
@@ -26,7 +28,7 @@ export function GeneralInfo(props: Props) {
             variant="flushed"
             id="firstName"
             type="text"
-            value={userInputs.firstName ? userInputs.firstName : firstName}
+            value={firstName}
             isDisabled={props.submitState ? true : false}
             onChange={handleInputChange}
           />
@@ -37,7 +39,7 @@ export function GeneralInfo(props: Props) {
             variant="flushed"
             id="lastName"
             type="text"
-            value={userInputs.lastName ? userInputs.lastName : lastName}
+            value={lastName}
             isDisabled={props.submitState ? true : false}
             onChange={handleInputChange}
           />
@@ -48,7 +50,7 @@ export function GeneralInfo(props: Props) {
         variant="flushed"
         id="email"
         type="email"
-        value={userInputs.email ? userInputs.email : email}
+        value={email}
         isDisabled={props.submitState ? true : false}
         onChange={handleInputChange}
       />
@@ -57,7 +59,7 @@ export function GeneralInfo(props: Props) {
         variant="flushed"
         id="phone"
         type="text"
-        value={userInputs.phone ? userInputs.phone : phone}
+        value={phone}
         isDisabled={props.submitState ? true : false}
         onChange={handleInputChange}
       />

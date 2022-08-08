@@ -1,23 +1,26 @@
-import { info } from "console";
 import fp from "lodash";
-import { ParsedUrlQueryInput } from "querystring";
-import { GeneralInfo } from "./components/GeneralInfo";
 
-const _generalInfoTemplate = {
+interface UserInfoTemplate {
+  readonly [key: string]: string | number,
+}
+
+const _generalInfoTemplate: UserInfoTemplate = {
   firstName: "",
   lastName: "",
   email: "",
   phone: "",
 };
 
-const _educationalExpTemplate = {
+const _educationalExpTemplate: UserInfoTemplate = {
+  index: 0,
   school: "",
   study: "",
   from: "",
   end: "",
 };
 
-const _praticalExpTemplate = {
+const _praticalExpTemplate: UserInfoTemplate = {
+  index: 0,
   company: "",
   position: "",
   job: "",
@@ -25,20 +28,21 @@ const _praticalExpTemplate = {
   end: "",
 };
 
-type EducationExpInfo = typeof _educationalExpTemplate;
-
-type PracticalExpInfo = typeof _praticalExpTemplate;
+type GeneralInfoTemplate = typeof _generalInfoTemplate;
+type EducationExpInfoTemplate = typeof _educationalExpTemplate;
+type PracticalExpInfoTemplate = typeof _praticalExpTemplate;
+type UserInputs = GeneralInfoTemplate | EducationExpInfoTemplate | PracticalExpInfoTemplate;
 
 interface UserInfo {
   generalInfo: typeof _generalInfoTemplate;
-  educationExps: { [index: string]: EducationExpInfo };
-  practicalExps: { [index: string]: PracticalExpInfo };
+  educationExps: Array<EducationExpInfoTemplate>;
+  practicalExps: Array<PracticalExpInfoTemplate>;
 }
 
 const _initialData: UserInfo = {
   generalInfo: Object.assign({}, _generalInfoTemplate),
-  educationExps: { 1: Object.assign({}, _educationalExpTemplate) },
-  practicalExps: { 1: Object.assign({}, _praticalExpTemplate) },
+  educationExps: new Array(fp.cloneDeep(_educationalExpTemplate)),
+  practicalExps: new Array(fp.cloneDeep(_praticalExpTemplate)),
 };
 
 const getLocalData = () => localStorage.getItem("userData");
@@ -58,20 +62,67 @@ function initStore(): UserInfo {
   }
 }
 
-const storeData = (function () {
-  const json = getLocalData();
-  if (json) {
-    const storageData: UserInfo = JSON.parse(json);
-    console.log("Resume stored data");
-    return storageData;
+function isValidInfoFormat(inputs: UserInputs, template: UserInputs) {
+  if (typeof inputs === "object") {
+    let isValid = true;
+    for (const [key, value] of Object.entries(inputs)) {
+      if (template.hasOwnProperty(key) && typeof value === typeof template[key])
+        continue;
+      else {
+        isValid = false;
+        break;
+      }
+    }
+    return isValid;
   }
-  console.log("Init data");
-  return initStore();
+  return false;
+}
+
+const StoreData = (function () {
+
+  function get() {
+    const json = getLocalData();
+    if (json) {
+      const storageData: UserInfo = JSON.parse(json);
+      console.log("Resume stored data");
+      return storageData;
+    }
+    console.log("Init data");
+    return initStore();
+  }
+
+  function set(data: UserInfo): UserInfo | undefined {
+    try {
+      const { generalInfo, educationExps, practicalExps } = data;
+      if (
+        fp.isEqualWith(generalInfo, _generalInfoTemplate, isValidInfoFormat) &&
+        educationExps.every((item) =>
+          fp.isEqualWith(item, _educationalExpTemplate, isValidInfoFormat)
+        ) &&
+        practicalExps.every((item) =>
+          fp.isEqualWith(item, _praticalExpTemplate, isValidInfoFormat)
+        )
+      ) {
+        const newStoreData: UserInfo = {
+          generalInfo: Object.assign({}, generalInfo),
+          educationExps: fp.cloneDeep(educationExps),
+          practicalExps: fp.cloneDeep(practicalExps),
+        };
+        localStorage.setItem("userData", JSON.stringify(newStoreData));
+        return newStoreData;
+      }
+      throw new Error("Incorrect data format");
+    } catch (err) {
+      console.log("Unable to store data: " + err);
+    }
+  }
+  return {get, set}
 })();
 
 export {
-  storeData,
-  type EducationExpInfo,
-  type PracticalExpInfo,
+  StoreData,
+  type GeneralInfoTemplate,
+  type EducationExpInfoTemplate,
+  type PracticalExpInfoTemplate,
   type UserInfo,
 };

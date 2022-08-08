@@ -1,9 +1,9 @@
 import React from "react";
 import { Container, FormLabel, Input, Flex, Box } from "@chakra-ui/react";
-import { type EducationExpInfo } from "../store";
+import { type EducationExpInfoTemplate } from "../store";
 interface Props {
   submitState: boolean;
-  storeValues: EducationExpInfo;
+  storeValues: EducationExpInfoTemplate;
 }
 export function EducationalExp(props: Props) {
   const [userInputs, setUserInputs] = React.useState({
