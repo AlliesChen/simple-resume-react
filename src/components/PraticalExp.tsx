@@ -23,6 +23,17 @@ export function PracticalExp(props: Props) {
     setUserInputs((prev) => ({ ...prev, [id]: value }));
   };
 
+  const containerAttr = props.submitState
+    ? { m: 12, maxW: "3xl" }
+    : {
+        m: 12,
+        p: 8,
+        maxW: "3xl",
+        border: "1px",
+        borderRadius: "base",
+        borderColor: "gray.400",
+      };
+
   useEffect(() => {
     const userInputPracticalExp: PracticalExpInfoTemplate = Object.assign(
       {},
@@ -33,7 +44,7 @@ export function PracticalExp(props: Props) {
   }, [props.submitState]);
 
   return (
-    <Container m={12} maxW="3xl">
+    <Container {...containerAttr}>
       <FormLabel htmlFor="school">Company Name</FormLabel>
       <Input
         variant="flushed"

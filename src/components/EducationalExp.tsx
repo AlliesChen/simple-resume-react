@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { Container, FormLabel, Input, Flex, Box } from "@chakra-ui/react";
 import { type EducationExpInfoTemplate } from "../store";
+import { expContainerAttr, onEditExpContainerAttr } from "../styles/styleComponents"
 interface Props {
   submitState: boolean;
   storeValues: EducationExpInfoTemplate;
@@ -13,6 +14,7 @@ export function EducationalExp(props: Props) {
     const { id, value } = e.target;
     setUserInputs((prev) => ({ ...prev, [id]: value }));
   };
+  const containerAttr = props.submitState ? expContainerAttr : onEditExpContainerAttr
 
   useEffect(() => {
     const userInputEducationExp: EducationExpInfoTemplate = Object.assign(
@@ -24,7 +26,7 @@ export function EducationalExp(props: Props) {
   }, [props.submitState]);
 
   return (
-    <Container m={12} maxW="3xl">
+    <Container {...containerAttr}>
       <FormLabel htmlFor="school">School Name</FormLabel>
       <Input
         variant="flushed"
@@ -67,6 +69,7 @@ export function EducationalExp(props: Props) {
           />
         </Box>
       </Flex>
+      
     </Container>
   );
 }

@@ -10,23 +10,47 @@ import {
 import { GeneralInfo } from "./components/GeneralInfo";
 import { EducationalExp } from "./components/EducationalExp";
 import { PracticalExp } from "./components/PraticalExp";
-import { StoreData, type GeneralInfoTemplate, type EducationExpInfoTemplate, type PracticalExpInfoTemplate, type UserInfo } from "./store";
+import { AppendExpButton } from "./components/AppendExpButton";
+import {
+  StoreData,
+  type GeneralInfoTemplate,
+  type EducationExpInfoTemplate,
+  type PracticalExpInfoTemplate,
+  type UserInfo,
+} from "./store";
 
 function App() {
   const [isSubmit, setIsSubmit] = React.useState<boolean>(false);
-  const [userData, setUserData] = React.useState<UserInfo>(StoreData.get())
+  const [userData, setUserData] = React.useState<UserInfo>(StoreData.get());
   const { generalInfo, educationExps, practicalExps } = userData;
-  const [userInputGeneralInfo, setUserInputGeneralInfo] = React.useState<GeneralInfoTemplate>({...generalInfo});
-  const [userInputEducationExps, setUserInputEducationExps] = React.useState<EducationExpInfoTemplate[]>([...educationExps]);
-  const [userInputPracticalExps, setUserInputPracticalExps] = React.useState<PracticalExpInfoTemplate[]>([...practicalExps]);
-  const submitEducationExpsInputs = (userInputs: EducationExpInfoTemplate): EducationExpInfoTemplate[] => {
-    setUserInputEducationExps((prev) => prev.map((item: EducationExpInfoTemplate) => item.index === userInputs.index ? userInputs : item));
+  const [userInputGeneralInfo, setUserInputGeneralInfo] =
+    React.useState<GeneralInfoTemplate>({ ...generalInfo });
+  const [userInputEducationExps, setUserInputEducationExps] = React.useState<
+    EducationExpInfoTemplate[]
+  >([...educationExps]);
+  const [userInputPracticalExps, setUserInputPracticalExps] = React.useState<
+    PracticalExpInfoTemplate[]
+  >([...practicalExps]);
+  const submitEducationExpsInputs = (
+    userInputs: EducationExpInfoTemplate
+  ): EducationExpInfoTemplate[] => {
+    setUserInputEducationExps((prev) =>
+      prev.map((item: EducationExpInfoTemplate) =>
+        item.index === userInputs.index ? userInputs : item
+      )
+    );
     return userInputEducationExps;
-  }
-  const submitPracticalExpsInputs = (userInputs: PracticalExpInfoTemplate): PracticalExpInfoTemplate[] => {
-    setUserInputPracticalExps((prev) => prev.map((item: PracticalExpInfoTemplate) => item.index === userInputs.index ? userInputs : item));
+  };
+  const submitPracticalExpsInputs = (
+    userInputs: PracticalExpInfoTemplate
+  ): PracticalExpInfoTemplate[] => {
+    setUserInputPracticalExps((prev) =>
+      prev.map((item: PracticalExpInfoTemplate) =>
+        item.index === userInputs.index ? userInputs : item
+      )
+    );
     return userInputPracticalExps;
-  }
+  };
   const EducationExps = educationExps.map((info, index) => (
     <EducationalExp
       key={index}
@@ -46,14 +70,27 @@ function App() {
   ));
 
   useEffect(() => {
-    const userInputData = {
-      generalInfo: Object.assign(generalInfo, userInputGeneralInfo),
-      educationExps: Object.assign(educationExps, fp.cloneDeep(userInputEducationExps)),
-      practicalExps: Object.assign(practicalExps, fp.cloneDeep(userInputPracticalExps)),
+    if (isSubmit) {
+      const userInputData = {
+        generalInfo: Object.assign(generalInfo, userInputGeneralInfo),
+        educationExps: Object.assign(
+          educationExps,
+          fp.cloneDeep(userInputEducationExps)
+        ),
+        practicalExps: Object.assign(
+          practicalExps,
+          fp.cloneDeep(userInputPracticalExps)
+        ),
+      };
+      StoreData.set(userInputData);
+      setUserData(StoreData.get());
     }
-    StoreData.set(userInputData)
-    setUserData(StoreData.get());
-  }, [isSubmit, fp.isEqual(userInputGeneralInfo, generalInfo), fp.isEqual(userInputEducationExps, educationExps), fp.isEqual(userInputPracticalExps, practicalExps)])
+  }, [
+    isSubmit,
+    fp.isEqual(userInputGeneralInfo, generalInfo),
+    fp.isEqual(userInputEducationExps, educationExps),
+    fp.isEqual(userInputPracticalExps, practicalExps),
+  ]);
 
   return (
     <ChakraProvider>
@@ -67,7 +104,17 @@ function App() {
           submitInputs={setUserInputGeneralInfo}
         ></GeneralInfo>
         {EducationExps}
+        {isSubmit === false && (
+          <AppendExpButton setAppUserData={setUserData} template="EducationExp">
+            + Add New Education Experience
+          </AppendExpButton>
+        )}
         {PracticalExps}
+        {isSubmit === false && (
+          <AppendExpButton setAppUserData={setUserData} template="PracticalExp">
+            + Add New Work Experience
+          </AppendExpButton>
+        )}
       </Container>
       <Button
         position="absolute"

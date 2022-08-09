@@ -112,7 +112,20 @@ const StoreData = (function () {
       console.log("Unable to store data: " + err);
     }
   }
-  return {get, set}
+
+  function getEducationExpTemplate(this: typeof StoreData) {
+    const appData = this.get();
+    const newIndex = appData.educationExps.length;
+    return Object.assign({}, _educationalExpTemplate, {index: newIndex});
+  }
+
+  function getPracticalExpTemplate(this: typeof StoreData) {
+    const appData = this.get();
+    const newIndex = appData.practicalExps.length;
+    return Object.assign({}, _praticalExpTemplate, {index: newIndex});
+  }
+
+  return { get, set, getEducationExpTemplate, getPracticalExpTemplate }
 })();
 
 export {
