@@ -11,11 +11,9 @@ export function GeneralInfo(props: Props) {
   const { firstName, lastName, email, phone } = userInputs;
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
-    console.log('handleInputChange')
     setUserInputs((prev) => ({ ...prev, [id]: value }));
   };
   useEffect(() => {
-    console.log('GeneralInfo useEffect triggered')
     props.submitInputs(prev => Object.assign(prev, userInputs));
   }, [props.submitState])
 

@@ -1,17 +1,13 @@
 import fp from "lodash";
 
-interface UserInfoTemplate {
-  readonly [key: string]: string | number,
-}
-
-const _generalInfoTemplate: UserInfoTemplate = {
+const _generalInfoTemplate = {
   firstName: "",
   lastName: "",
   email: "",
   phone: "",
 };
 
-const _educationalExpTemplate: UserInfoTemplate = {
+const _educationalExpTemplate = {
   index: 0,
   school: "",
   study: "",
@@ -19,7 +15,7 @@ const _educationalExpTemplate: UserInfoTemplate = {
   end: "",
 };
 
-const _praticalExpTemplate: UserInfoTemplate = {
+const _praticalExpTemplate = {
   index: 0,
   company: "",
   position: "",
@@ -66,7 +62,7 @@ function isValidInfoFormat(inputs: UserInputs, template: UserInputs) {
   if (typeof inputs === "object") {
     let isValid = true;
     for (const [key, value] of Object.entries(inputs)) {
-      if (template.hasOwnProperty(key) && typeof value === typeof template[key])
+      if (template.hasOwnProperty(key) && typeof value === typeof template[key as keyof UserInputs])
         continue;
       else {
         isValid = false;

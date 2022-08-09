@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Container,
   FormLabel,
@@ -11,22 +11,27 @@ import { type PracticalExpInfoTemplate } from "../store";
 interface Props {
   submitState: boolean;
   storeValues: PracticalExpInfoTemplate;
+  submitInputs: (obj: PracticalExpInfoTemplate) => PracticalExpInfoTemplate[];
 }
 export function PracticalExp(props: Props) {
-  const [userInputs, setUserInputs] = React.useState({
-    company: "",
-    position: "",
-    job: "",
-    from: "",
-    end: "",
-  });
-  const { company, position, job, from, end } = props.storeValues;
+  const [userInputs, setUserInputs] = React.useState({ ...props.storeValues });
+  const { index, company, position, job, from, end } = props.storeValues;
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { id, value } = e.target;
     setUserInputs((prev) => ({ ...prev, [id]: value }));
   };
+
+  useEffect(() => {
+    const userInputPracticalExp: PracticalExpInfoTemplate = Object.assign(
+      {},
+      userInputs,
+      { index }
+    );
+    props.submitInputs(userInputPracticalExp);
+  }, [props.submitState]);
+
   return (
     <Container m={12} maxW="3xl">
       <FormLabel htmlFor="school">Company Name</FormLabel>

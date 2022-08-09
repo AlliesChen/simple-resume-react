@@ -10,20 +10,29 @@ import {
 import { GeneralInfo } from "./components/GeneralInfo";
 import { EducationalExp } from "./components/EducationalExp";
 import { PracticalExp } from "./components/PraticalExp";
-import { StoreData, type GeneralInfoTemplate, type UserInfo } from "./store";
+import { StoreData, type GeneralInfoTemplate, type EducationExpInfoTemplate, type PracticalExpInfoTemplate, type UserInfo } from "./store";
 
 function App() {
   const [isSubmit, setIsSubmit] = React.useState<boolean>(false);
   const [userData, setUserData] = React.useState<UserInfo>(StoreData.get())
   const { generalInfo, educationExps, practicalExps } = userData;
   const [userInputGeneralInfo, setUserInputGeneralInfo] = React.useState<GeneralInfoTemplate>({...generalInfo});
-  const [userInputEducationExps, setUserInputEducationExps] = React.useState<UserInfo['educationExps']>({...educationExps});
-  const [userInputPracticalExps, setUserInputPracticalExps] = React.useState<UserInfo['practicalExps']>({...practicalExps});
+  const [userInputEducationExps, setUserInputEducationExps] = React.useState<EducationExpInfoTemplate[]>([...educationExps]);
+  const [userInputPracticalExps, setUserInputPracticalExps] = React.useState<PracticalExpInfoTemplate[]>([...practicalExps]);
+  const submitEducationExpsInputs = (userInputs: EducationExpInfoTemplate): EducationExpInfoTemplate[] => {
+    setUserInputEducationExps((prev) => prev.map((item: EducationExpInfoTemplate) => item.index === userInputs.index ? userInputs : item));
+    return userInputEducationExps;
+  }
+  const submitPracticalExpsInputs = (userInputs: PracticalExpInfoTemplate): PracticalExpInfoTemplate[] => {
+    setUserInputPracticalExps((prev) => prev.map((item: PracticalExpInfoTemplate) => item.index === userInputs.index ? userInputs : item));
+    return userInputPracticalExps;
+  }
   const EducationExps = educationExps.map((info, index) => (
     <EducationalExp
       key={index}
       submitState={isSubmit}
       storeValues={info}
+      submitInputs={submitEducationExpsInputs}
     ></EducationalExp>
   ));
 
@@ -32,21 +41,19 @@ function App() {
       key={index}
       submitState={isSubmit}
       storeValues={info}
+      submitInputs={submitPracticalExpsInputs}
     ></PracticalExp>
   ));
-  
+
   useEffect(() => {
-    console.log('App useEffect triggered');
     const userInputData = {
       generalInfo: Object.assign(generalInfo, userInputGeneralInfo),
       educationExps: Object.assign(educationExps, fp.cloneDeep(userInputEducationExps)),
       practicalExps: Object.assign(practicalExps, fp.cloneDeep(userInputPracticalExps)),
     }
-    console.log(generalInfo);
-    console.log(fp.cloneDeep(userInputGeneralInfo));
     StoreData.set(userInputData)
     setUserData(StoreData.get());
-  }, [isSubmit, userInputGeneralInfo])
+  }, [isSubmit, fp.isEqual(userInputGeneralInfo, generalInfo), fp.isEqual(userInputEducationExps, educationExps), fp.isEqual(userInputPracticalExps, practicalExps)])
 
   return (
     <ChakraProvider>

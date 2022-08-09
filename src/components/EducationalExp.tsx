@@ -1,22 +1,28 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Container, FormLabel, Input, Flex, Box } from "@chakra-ui/react";
 import { type EducationExpInfoTemplate } from "../store";
 interface Props {
   submitState: boolean;
   storeValues: EducationExpInfoTemplate;
+  submitInputs: (obj: EducationExpInfoTemplate) => EducationExpInfoTemplate[];
 }
 export function EducationalExp(props: Props) {
-  const [userInputs, setUserInputs] = React.useState({
-    school: "",
-    study: "",
-    from: "",
-    end: "",
-  });
-  const { school, study, from, end } = props.storeValues;
+  const [userInputs, setUserInputs] = React.useState({ ...props.storeValues });
+  const { index, school, study, from, end } = props.storeValues;
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setUserInputs((prev) => ({ ...prev, [id]: value }));
   };
+
+  useEffect(() => {
+    const userInputEducationExp: EducationExpInfoTemplate = Object.assign(
+      {},
+      userInputs,
+      { index }
+    );
+    props.submitInputs(userInputEducationExp);
+  }, [props.submitState]);
+
   return (
     <Container m={12} maxW="3xl">
       <FormLabel htmlFor="school">School Name</FormLabel>
