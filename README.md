@@ -1,8 +1,14 @@
-# Getting Started with Create React App
+# Simple Resume
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Just a practice for using TypeScript with React.
+
+This app only stores the info on user's local storage, once the user have ever submitted. (click the "Submit" button.)
+
+That means, clear browser data should make the stored data disappear.
 
 ## Available Scripts
+
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 In the project directory, you can run:
 

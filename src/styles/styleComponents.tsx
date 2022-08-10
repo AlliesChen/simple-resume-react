@@ -1,13 +1,13 @@
 const expContainerAttr = {
-    m: 12,
+    mx: 12,
+    my: 6,
+    p: 4,
     maxW: "3xl"
 }
 
-const onEditExpContainerAttr = Object.assign(expContainerAttr, {
-    maxW: "3xl",
-    border: "1px",
-    borderRadius: "base",
-    borderColor: "gray.400",
+const onEditExpContainerAttr = Object.assign({}, expContainerAttr, {
+    _hover: { border: "1px", borderColor: "gray.400", },
+    borderRadius: "lg",
 })
 
 export{expContainerAttr, onEditExpContainerAttr}

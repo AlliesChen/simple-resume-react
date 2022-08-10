@@ -25,7 +25,7 @@ export function AppendExpButton(props: Props) {
     props.setAppUserData(newData);
   }
   return (
-    <Center>
+    <Center my={6} >
       <Button width="3xl" colorScheme="teal" variant="outline" onClick={appendExpBlock}>
         {props.children}
       </Button>

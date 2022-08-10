@@ -6,6 +6,11 @@ import {
   Heading,
   Container,
   Button,
+  Box,
+  Link,
+  Image,
+  Text,
+  Flex,
 } from "@chakra-ui/react";
 import { GeneralInfo } from "./components/GeneralInfo";
 import { EducationalExp } from "./components/EducationalExp";
@@ -18,6 +23,7 @@ import {
   type PracticalExpInfoTemplate,
   type UserInfo,
 } from "./store";
+import GitHubIcon from "./assets/GitHub-Mark-64px.png";
 
 function App() {
   const [isSubmit, setIsSubmit] = React.useState<boolean>(false);
@@ -31,32 +37,14 @@ function App() {
   const [userInputPracticalExps, setUserInputPracticalExps] = React.useState<
     PracticalExpInfoTemplate[]
   >([...practicalExps]);
-  const submitEducationExpsInputs = (
-    userInputs: EducationExpInfoTemplate
-  ): EducationExpInfoTemplate[] => {
-    setUserInputEducationExps((prev) =>
-      prev.map((item: EducationExpInfoTemplate) =>
-        item.index === userInputs.index ? userInputs : item
-      )
-    );
-    return userInputEducationExps;
-  };
-  const submitPracticalExpsInputs = (
-    userInputs: PracticalExpInfoTemplate
-  ): PracticalExpInfoTemplate[] => {
-    setUserInputPracticalExps((prev) =>
-      prev.map((item: PracticalExpInfoTemplate) =>
-        item.index === userInputs.index ? userInputs : item
-      )
-    );
-    return userInputPracticalExps;
-  };
+
   const EducationExps = educationExps.map((info, index) => (
     <EducationalExp
       key={index}
       submitState={isSubmit}
       storeValues={info}
-      submitInputs={submitEducationExpsInputs}
+      setInputs={setUserInputEducationExps}
+      setAppUserData={setUserData}
     ></EducationalExp>
   ));
 
@@ -65,23 +53,19 @@ function App() {
       key={index}
       submitState={isSubmit}
       storeValues={info}
-      submitInputs={submitPracticalExpsInputs}
+      setInputs={setUserInputPracticalExps}
+      setAppUserData={setUserData}
     ></PracticalExp>
   ));
 
   useEffect(() => {
     if (isSubmit) {
       const userInputData = {
-        generalInfo: Object.assign(generalInfo, userInputGeneralInfo),
-        educationExps: Object.assign(
-          educationExps,
-          fp.cloneDeep(userInputEducationExps)
-        ),
-        practicalExps: Object.assign(
-          practicalExps,
-          fp.cloneDeep(userInputPracticalExps)
-        ),
+        generalInfo: Object.assign({}, generalInfo, userInputGeneralInfo),
+        educationExps: fp.cloneDeep(userInputEducationExps),
+        practicalExps: fp.cloneDeep(userInputPracticalExps),
       };
+      console.log(userInputData);
       StoreData.set(userInputData);
       setUserData(StoreData.get());
     }
@@ -125,6 +109,24 @@ function App() {
       >
         {isSubmit ? "Edit" : "Submit"}
       </Button>
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        p="2"
+        bg="teal"
+        color="teal.100"
+      >
+        <Link
+          href="https://github.com/AlliesChen/simple-resume-react"
+          isExternal
+        >
+          <Flex>
+            <Image boxSize="24px" src={GitHubIcon} alt="github icon"></Image>
+            <Text ml={1}>AlliesChen@GitHub</Text>
+          </Flex>
+        </Link>
+      </Box>
     </ChakraProvider>
   );
 }

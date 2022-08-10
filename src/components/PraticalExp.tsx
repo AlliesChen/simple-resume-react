@@ -6,16 +6,29 @@ import {
   Flex,
   Box,
   Textarea,
+  IconButton,
+  Spacer,
 } from "@chakra-ui/react";
-import { type PracticalExpInfoTemplate } from "../store";
+import { ArrowUpIcon, ArrowDownIcon } from "@chakra-ui/icons";
+import { type PracticalExpInfoTemplate, type UserInfo } from "../store";
+import {
+  expContainerAttr,
+  onEditExpContainerAttr,
+} from "../styles/styleComponents";
+import { DeleteExpButton } from "./DeleteExpButton"
+
 interface Props {
   submitState: boolean;
   storeValues: PracticalExpInfoTemplate;
-  submitInputs: (obj: PracticalExpInfoTemplate) => PracticalExpInfoTemplate[];
+  setInputs: React.Dispatch<
+    React.SetStateAction<PracticalExpInfoTemplate[]>
+  >;
+  setAppUserData: React.Dispatch<React.SetStateAction<UserInfo>>;
 }
+
 export function PracticalExp(props: Props) {
   const [userInputs, setUserInputs] = React.useState({ ...props.storeValues });
-  const { index, company, position, job, from, end } = props.storeValues;
+  const { company, position, job, from, end } = userInputs;
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -23,35 +36,32 @@ export function PracticalExp(props: Props) {
     setUserInputs((prev) => ({ ...prev, [id]: value }));
   };
 
-  const containerAttr = props.submitState
-    ? { m: 12, maxW: "3xl" }
-    : {
-        m: 12,
-        p: 8,
-        maxW: "3xl",
-        border: "1px",
-        borderRadius: "base",
-        borderColor: "gray.400",
-      };
-
   useEffect(() => {
     const userInputPracticalExp: PracticalExpInfoTemplate = Object.assign(
       {},
-      userInputs,
-      { index }
+      userInputs
     );
-    props.submitInputs(userInputPracticalExp);
+    props.setInputs((prev) =>
+      prev.map((item: PracticalExpInfoTemplate) =>
+        item.index === userInputPracticalExp.index
+          ? userInputPracticalExp
+          : item
+      )
+    );
   }, [props.submitState]);
 
   return (
-    <Container {...containerAttr}>
+    <Container
+      position="relative"
+      {...(props.submitState ? expContainerAttr : onEditExpContainerAttr)}
+    >
       <FormLabel htmlFor="school">Company Name</FormLabel>
       <Input
         variant="flushed"
         id="company"
         type="text"
         isDisabled={props.submitState ? true : false}
-        value={userInputs.company ? userInputs.company : company}
+        value={company}
         onChange={handleInputChange}
       />
       <FormLabel htmlFor="position">Position Title</FormLabel>
@@ -60,7 +70,7 @@ export function PracticalExp(props: Props) {
         id="position"
         type="text"
         isDisabled={props.submitState ? true : false}
-        value={userInputs.position ? userInputs.position : position}
+        value={position}
         onChange={handleInputChange}
       />
       <FormLabel htmlFor="job">Job Description</FormLabel>
@@ -68,7 +78,7 @@ export function PracticalExp(props: Props) {
         placeholder="main tasks of your job"
         id="job"
         isDisabled={props.submitState ? true : false}
-        value={userInputs.job ? userInputs.job : job}
+        value={job}
         onChange={handleInputChange}
       />
       <Flex gap={8}>
@@ -79,7 +89,7 @@ export function PracticalExp(props: Props) {
             id="from"
             type="date"
             isDisabled={props.submitState ? true : false}
-            value={userInputs.from ? userInputs.from : from}
+            value={from}
             onChange={handleInputChange}
           />
         </Box>
@@ -90,11 +100,36 @@ export function PracticalExp(props: Props) {
             id="end"
             type="date"
             isDisabled={props.submitState ? true : false}
-            value={userInputs.end ? userInputs.end : end}
+            value={end}
             onChange={handleInputChange}
           />
         </Box>
       </Flex>
+      {props.submitState === false && (
+        <Flex
+          position="absolute"
+          top="2"
+          right="-12"
+          h="90%"
+          flexDirection="column"
+          gap="4"
+        >
+          <IconButton
+            aria-label="Delete education block"
+            icon={<ArrowUpIcon />}
+          />
+          <IconButton
+            aria-label="Delete education block"
+            icon={<ArrowDownIcon />}
+          />
+          <Spacer />
+          <DeleteExpButton
+            setInputs={props.setInputs}
+            template="PracticalExp"
+            blockIndex={userInputs.index}
+          ></DeleteExpButton>
+        </Flex>
+      )}
     </Container>
   );
 }

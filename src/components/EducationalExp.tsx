@@ -1,39 +1,64 @@
 import React, { useEffect } from "react";
-import { Container, FormLabel, Input, Flex, Box } from "@chakra-ui/react";
-import { type EducationExpInfoTemplate } from "../store";
-import { expContainerAttr, onEditExpContainerAttr } from "../styles/styleComponents"
+import {
+  Container,
+  FormLabel,
+  Input,
+  Flex,
+  Box,
+  IconButton,
+  Spacer,
+} from "@chakra-ui/react";
+import { ArrowUpIcon, ArrowDownIcon } from "@chakra-ui/icons";
+import { type EducationExpInfoTemplate, type UserInfo } from "../store";
+import {
+  expContainerAttr,
+  onEditExpContainerAttr,
+} from "../styles/styleComponents";
+import { DeleteExpButton } from "./DeleteExpButton"
+
 interface Props {
   submitState: boolean;
   storeValues: EducationExpInfoTemplate;
-  submitInputs: (obj: EducationExpInfoTemplate) => EducationExpInfoTemplate[];
+  setInputs: React.Dispatch<
+    React.SetStateAction<EducationExpInfoTemplate[]>
+  >;
+  setAppUserData: React.Dispatch<React.SetStateAction<UserInfo>>;
 }
+
 export function EducationalExp(props: Props) {
   const [userInputs, setUserInputs] = React.useState({ ...props.storeValues });
-  const { index, school, study, from, end } = props.storeValues;
+  const { school, study, from, end } = userInputs;
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setUserInputs((prev) => ({ ...prev, [id]: value }));
   };
-  const containerAttr = props.submitState ? expContainerAttr : onEditExpContainerAttr
 
   useEffect(() => {
     const userInputEducationExp: EducationExpInfoTemplate = Object.assign(
       {},
-      userInputs,
-      { index }
+      userInputs
     );
-    props.submitInputs(userInputEducationExp);
+    props.setInputs((prev) =>
+      prev.map((item: EducationExpInfoTemplate) =>
+        item.index === userInputEducationExp.index
+          ? userInputEducationExp
+          : item
+      )
+    );
   }, [props.submitState]);
 
   return (
-    <Container {...containerAttr}>
+    <Container
+      position="relative"
+      {...(props.submitState ? expContainerAttr : onEditExpContainerAttr)}
+    >
       <FormLabel htmlFor="school">School Name</FormLabel>
       <Input
         variant="flushed"
         id="school"
         type="text"
         isDisabled={props.submitState ? true : false}
-        value={userInputs.school ? userInputs.school : school}
+        value={school}
         onChange={handleInputChange}
       />
       <FormLabel htmlFor="study">Title of Study</FormLabel>
@@ -42,7 +67,7 @@ export function EducationalExp(props: Props) {
         id="study"
         type="text"
         isDisabled={props.submitState ? true : false}
-        value={userInputs.study ? userInputs.study : study}
+        value={study}
         onChange={handleInputChange}
       />
       <Flex gap={8}>
@@ -53,7 +78,7 @@ export function EducationalExp(props: Props) {
             id="from"
             type="date"
             isDisabled={props.submitState ? true : false}
-            value={userInputs.from ? userInputs.from : from}
+            value={from}
             onChange={handleInputChange}
           />
         </Box>
@@ -64,12 +89,36 @@ export function EducationalExp(props: Props) {
             id="end"
             type="date"
             isDisabled={props.submitState ? true : false}
-            value={userInputs.end ? userInputs.end : end}
+            value={end}
             onChange={handleInputChange}
           />
         </Box>
       </Flex>
-      
+      {props.submitState === false && (
+        <Flex
+          position="absolute"
+          top="2"
+          right="-12"
+          h="90%"
+          flexDirection="column"
+          gap="4"
+        >
+          <IconButton
+            aria-label="Delete education block"
+            icon={<ArrowUpIcon />}
+          />
+          <IconButton
+            aria-label="Delete education block"
+            icon={<ArrowDownIcon />}
+          />
+          <Spacer />
+          <DeleteExpButton 
+            setInputs={props.setInputs}
+            template="EducationExp"
+            blockIndex={userInputs.index}
+          ></DeleteExpButton>
+        </Flex>
+      )}
     </Container>
   );
 }
