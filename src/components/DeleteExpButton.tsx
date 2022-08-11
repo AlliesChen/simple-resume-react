@@ -18,7 +18,7 @@ type UserInfoKeys = Exclude<keyof UserInfo, "generalInfo">;
 
 interface Props<T> {
   block: UserInfoKeys;
-  blockIndex: number;
+  blockKey: 
   setInputs: React.Dispatch<React.SetStateAction<T>>;
   setAppUserData: React.Dispatch<React.SetStateAction<UserInfo>>;
 }

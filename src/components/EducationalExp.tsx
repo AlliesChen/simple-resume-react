@@ -33,6 +33,10 @@ export function EducationalExp(props: Props) {
     setUserInputs((prev) => ({ ...prev, [id]: value }));
   };
 
+  // function ascendExp() {
+  //   const newArr = 
+  // }
+
   useEffect(() => {
     const userInputEducationExp: EducationExpInfoTemplate = Object.assign(
       {},
@@ -40,7 +44,7 @@ export function EducationalExp(props: Props) {
     );
     props.setInputs((prev) =>
       prev.map((item: EducationExpInfoTemplate) =>
-        item.index === userInputEducationExp.index
+        item.key === userInputEducationExp.key
           ? userInputEducationExp
           : item
       )
@@ -114,7 +118,6 @@ export function EducationalExp(props: Props) {
           <Spacer />
           <DeleteExpButton 
             block="educationExps"
-            blockIndex={userInputs.index}
             setInputs={props.setInputs}
             setAppUserData={props.setAppUserData}
           ></DeleteExpButton>

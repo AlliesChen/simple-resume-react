@@ -134,7 +134,7 @@ function App() {
         >
           <Flex>
             <Image boxSize="24px" src={GitHubIcon} alt="github icon"></Image>
-            <Text ml={1}>AlliesChen@GitHub</Text>
+            <Text ml={1} as="i" >AlliesChen@GitHub</Text>
           </Flex>
         </Link>
       </Box>

@@ -15,14 +15,12 @@ import {
   expContainerAttr,
   onEditExpContainerAttr,
 } from "../styles/styleComponents";
-import { DeleteExpButton } from "./DeleteExpButton"
+import { DeleteExpButton } from "./DeleteExpButton";
 
 interface Props {
   submitState: boolean;
   storeValues: PracticalExpInfoTemplate;
-  setInputs: React.Dispatch<
-    React.SetStateAction<PracticalExpInfoTemplate[]>
-  >;
+  setInputs: React.Dispatch<React.SetStateAction<PracticalExpInfoTemplate[]>>;
   setAppUserData: React.Dispatch<React.SetStateAction<UserInfo>>;
 }
 
@@ -36,19 +34,18 @@ export function PracticalExp(props: Props) {
   };
 
   useEffect(() => {
-    if (props.submitState) {
-      const userInputPracticalExp: PracticalExpInfoTemplate = Object.assign(
-        {},
-        userInputs
-      );
-      props.setInputs((prev) =>
-        prev.map((item: PracticalExpInfoTemplate) =>
-          item.index === userInputPracticalExp.index
-            ? userInputPracticalExp
-            : item
-        )
-      );
-    }
+    const userInputPracticalExp: PracticalExpInfoTemplate = Object.assign(
+      {},
+      userInputs
+    );
+    console.log(JSON.stringify(userInputPracticalExp));
+    props.setInputs((prev) =>
+      prev.map((item: PracticalExpInfoTemplate) =>
+        item.key === userInputPracticalExp.key
+          ? userInputPracticalExp
+          : item
+      )
+    );
   }, [props.submitState]);
 
   return (
@@ -126,7 +123,6 @@ export function PracticalExp(props: Props) {
           <Spacer />
           <DeleteExpButton
             block="practicalExps"
-            blockIndex={userInputs.index}
             setInputs={props.setInputs}
             setAppUserData={props.setAppUserData}
           ></DeleteExpButton>

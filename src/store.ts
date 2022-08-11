@@ -10,7 +10,6 @@ const _generalInfoTemplate = {
 
 const _educationalExpTemplate = {
   key: nanoid(),
-  index: 0,
   school: "",
   study: "",
   from: "",
@@ -19,7 +18,6 @@ const _educationalExpTemplate = {
 
 const _praticalExpTemplate = {
   key: nanoid(),
-  index: 0,
   company: "",
   position: "",
   job: "",
@@ -117,19 +115,15 @@ const StoreData = (function () {
     }
   }
 
-  function getEducationExpTemplate(this: typeof StoreData) {
-    const appData = this.get();
-    const newIndex = {index: appData.educationExps.length};
+  function getEducationExpTemplate() {
     const newKey = {key: nanoid()}
-    const newExp: EducationExpInfoTemplate = Object.assign({}, _educationalExpTemplate, newIndex, newKey);
+    const newExp: EducationExpInfoTemplate = Object.assign({}, _educationalExpTemplate, newKey);
     return newExp
   }
 
-  function getPracticalExpTemplate(this: typeof StoreData) {
-    const appData = this.get();
-    const newIndex = {index: appData.practicalExps.length};
+  function getPracticalExpTemplate() {
     const newKey = {key: nanoid()}
-    const newExp: PracticalExpInfoTemplate = Object.assign({}, _praticalExpTemplate, newIndex, newKey)
+    const newExp: PracticalExpInfoTemplate = Object.assign({}, _praticalExpTemplate, newKey)
     return newExp
   }
 
