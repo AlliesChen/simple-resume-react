@@ -16,18 +16,20 @@ import { type UserInfo } from "../store";
 import fp from "lodash";
 
 type UserInfoKeys = Exclude<keyof UserInfo, "generalInfo">;
-interface Props {
-  template: "EducationExp" | "PracticalExp",
-  blockIndex: number,
-  setInputs: React.Dispatch<React.SetStateAction<UserInfo[UserInfoKeys]>>,
+interface Props<T> {
+  template: "EducationExp" | "PracticalExp";
+  blockIndex: number;
+  setInputs: React.Dispatch<React.SetStateAction<T>>;
 }
 
-export function DeleteExpButton(props: Props) {
+export function DeleteExpButton<T extends UserInfo[UserInfoKeys]>(
+  props: Props<T>
+) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = React.useRef<HTMLButtonElement>(null);
 
   function deleteExpBlock() {
-    props.setInputs(prev => {
+    props.setInputs((prev) => {
       const newData = fp.cloneDeep(prev);
       newData.splice(props.blockIndex, 1);
       let i = 0;
@@ -36,9 +38,9 @@ export function DeleteExpButton(props: Props) {
         i += 1;
       }
       console.log(newData);
-      return newData
+      return newData;
     });
-    onClose()
+    onClose();
   }
 
   return (
