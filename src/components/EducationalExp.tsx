@@ -14,27 +14,25 @@ import {
   expContainerAttr,
   onEditExpContainerAttr,
 } from "../styles/styleComponents";
-import { DeleteExpButton } from "./DeleteExpButton"
+import { DeleteExpButton } from "./DeleteExpButton";
 
 interface Props {
   submitState: boolean;
   storeValues: EducationExpInfoTemplate;
-  setInputs: React.Dispatch<
-    React.SetStateAction<EducationExpInfoTemplate[]>
-  >;
+  setInputs: React.Dispatch<React.SetStateAction<EducationExpInfoTemplate[]>>;
   setAppUserData: React.Dispatch<React.SetStateAction<UserInfo>>;
 }
 
 export function EducationalExp(props: Props) {
   const [userInputs, setUserInputs] = React.useState({ ...props.storeValues });
-  const { school, study, from, end } = userInputs;
+  const { key, school, study, from, end } = userInputs;
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setUserInputs((prev) => ({ ...prev, [id]: value }));
   };
 
   // function ascendExp() {
-  //   const newArr = 
+  //   const newArr =
   // }
 
   useEffect(() => {
@@ -44,9 +42,7 @@ export function EducationalExp(props: Props) {
     );
     props.setInputs((prev) =>
       prev.map((item: EducationExpInfoTemplate) =>
-        item.key === userInputEducationExp.key
-          ? userInputEducationExp
-          : item
+        item.key === userInputEducationExp.key ? userInputEducationExp : item
       )
     );
   }, [props.submitState]);
@@ -116,8 +112,9 @@ export function EducationalExp(props: Props) {
             icon={<ArrowDownIcon />}
           />
           <Spacer />
-          <DeleteExpButton 
+          <DeleteExpButton
             block="educationExps"
+            blockKey={key}
             setInputs={props.setInputs}
             setAppUserData={props.setAppUserData}
           ></DeleteExpButton>
