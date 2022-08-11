@@ -1,5 +1,5 @@
 import fp from "lodash";
-import { nanoid } from "nanoid"
+import { nanoid } from "nanoid";
 
 const _generalInfoTemplate = {
   firstName: "",
@@ -28,14 +28,17 @@ const _praticalExpTemplate = {
 type GeneralInfoTemplate = typeof _generalInfoTemplate;
 type EducationExpInfoTemplate = typeof _educationalExpTemplate;
 type PracticalExpInfoTemplate = typeof _praticalExpTemplate;
-
-type UserInputs = GeneralInfoTemplate | EducationExpInfoTemplate | PracticalExpInfoTemplate;
+type UserInputs =
+  | GeneralInfoTemplate
+  | EducationExpInfoTemplate
+  | PracticalExpInfoTemplate;
 
 interface UserInfo {
-  generalInfo: typeof _generalInfoTemplate;
+  generalInfo: GeneralInfoTemplate;
   educationExps: Array<EducationExpInfoTemplate>;
   practicalExps: Array<PracticalExpInfoTemplate>;
 }
+type UserInfoBlocks = Exclude<keyof UserInfo, "generalInfo">;
 
 const _initialData: UserInfo = {
   generalInfo: Object.assign({}, _generalInfoTemplate),
@@ -64,7 +67,10 @@ function isValidInfoFormat(inputs: UserInputs, template: UserInputs) {
   if (typeof inputs === "object") {
     let isValid = true;
     for (const [key, value] of Object.entries(inputs)) {
-      if (template.hasOwnProperty(key) && typeof value === typeof template[key as keyof UserInputs])
+      if (
+        template.hasOwnProperty(key) &&
+        typeof value === typeof template[key as keyof UserInputs]
+      )
         continue;
       else {
         isValid = false;
@@ -77,7 +83,6 @@ function isValidInfoFormat(inputs: UserInputs, template: UserInputs) {
 }
 
 const StoreData = (function () {
-
   function get() {
     const json = getLocalData();
     if (json) {
@@ -111,23 +116,31 @@ const StoreData = (function () {
       }
       throw new Error("Incorrect data format");
     } catch (err) {
-      console.log("Unable to store data: " + err);
+      console.error("Unable to store data: " + err);
     }
   }
 
   function getEducationExpTemplate() {
-    const newKey = {key: nanoid()}
-    const newExp: EducationExpInfoTemplate = Object.assign({}, _educationalExpTemplate, newKey);
-    return newExp
+    const newKey = { key: nanoid() };
+    const newExp: EducationExpInfoTemplate = Object.assign(
+      {},
+      _educationalExpTemplate,
+      newKey
+    );
+    return newExp;
   }
 
   function getPracticalExpTemplate() {
-    const newKey = {key: nanoid()}
-    const newExp: PracticalExpInfoTemplate = Object.assign({}, _praticalExpTemplate, newKey)
-    return newExp
+    const newKey = { key: nanoid() };
+    const newExp: PracticalExpInfoTemplate = Object.assign(
+      {},
+      _praticalExpTemplate,
+      newKey
+    );
+    return newExp;
   }
 
-  return { get, set, getEducationExpTemplate, getPracticalExpTemplate }
+  return { get, set, getEducationExpTemplate, getPracticalExpTemplate };
 })();
 
 export {
@@ -136,4 +149,5 @@ export {
   type EducationExpInfoTemplate,
   type PracticalExpInfoTemplate,
   type UserInfo,
+  type UserInfoBlocks,
 };

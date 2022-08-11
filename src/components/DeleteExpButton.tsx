@@ -12,7 +12,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { DeleteIcon } from "@chakra-ui/icons";
-import { type UserInfo } from "../store";
+import { type UserInfo } from "../utils/store";
 
 type UserInfoKeys = Exclude<keyof UserInfo, "generalInfo">;
 
@@ -32,8 +32,6 @@ export function DeleteExpButton<T extends UserInfo[UserInfoKeys]>(
   function mutateExps(arr: T): void {
     const blockIndex = arr.findIndex((item) => item.key === props.blockKey);
     arr.splice(blockIndex, 1);
-    console.log("After mutateExps: ");
-    console.log(JSON.stringify(arr));
   }
 
   function deleteExpBlock() {

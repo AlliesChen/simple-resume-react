@@ -9,14 +9,21 @@ import {
   Spacer,
 } from "@chakra-ui/react";
 import { ArrowUpIcon, ArrowDownIcon } from "@chakra-ui/icons";
-import { type EducationExpInfoTemplate, type UserInfo } from "../store";
+import {
+  type EducationExpInfoTemplate,
+  type UserInfo,
+  type UserInfoBlocks,
+} from "../utils/store";
 import {
   expContainerAttr,
   onEditExpContainerAttr,
 } from "../styles/styleComponents";
 import { DeleteExpButton } from "./DeleteExpButton";
+import fp from "lodash";
 
 interface Props {
+  index: number;
+  length: number;
   submitState: boolean;
   storeValues: EducationExpInfoTemplate;
   setInputs: React.Dispatch<React.SetStateAction<EducationExpInfoTemplate[]>>;
@@ -24,6 +31,7 @@ interface Props {
 }
 
 export function EducationalExp(props: Props) {
+  const BLOCK: UserInfoBlocks = "educationExps";
   const [userInputs, setUserInputs] = React.useState({ ...props.storeValues });
   const { key, school, study, from, end } = userInputs;
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,9 +39,26 @@ export function EducationalExp(props: Props) {
     setUserInputs((prev) => ({ ...prev, [id]: value }));
   };
 
-  // function ascendExp() {
-  //   const newArr =
-  // }
+  function moveExp(step: 1 | -1) {
+    new Promise((resolved) => {
+      const newData = {};
+      props.setAppUserData((prev) => {
+        const newAppData = Object.assign(newData, prev);
+        const blockIndex = newAppData[BLOCK].findIndex(
+          (block) => block.key === key
+        );
+        const currentBlock = fp.remove(
+          newAppData[BLOCK] as EducationExpInfoTemplate[],
+          (block) => block.key === key
+        )[0];
+        newAppData[BLOCK].splice(blockIndex + step, 0, currentBlock);
+        return newAppData;
+      });
+      resolved(newData);
+    }).then((newData) => {
+      props.setInputs(Reflect.get(newData as UserInfo, BLOCK));
+    });
+  }
 
   useEffect(() => {
     const userInputEducationExp: EducationExpInfoTemplate = Object.assign(
@@ -104,16 +129,20 @@ export function EducationalExp(props: Props) {
           gap="4"
         >
           <IconButton
-            aria-label="Delete education block"
+            aria-label="Ascend education block"
             icon={<ArrowUpIcon />}
+            onClick={() => moveExp(-1)}
+            disabled={props.index === 0}
           />
           <IconButton
-            aria-label="Delete education block"
+            aria-label="Descend education block"
             icon={<ArrowDownIcon />}
+            onClick={() => moveExp(1)}
+            disabled={props.index === props.length - 1}
           />
           <Spacer />
           <DeleteExpButton
-            block="educationExps"
+            block={BLOCK}
             blockKey={key}
             setInputs={props.setInputs}
             setAppUserData={props.setAppUserData}

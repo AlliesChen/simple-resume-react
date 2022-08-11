@@ -1,26 +1,31 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import { Container, Box, FormLabel, Input, Flex } from "@chakra-ui/react";
-import { type GeneralInfoTemplate } from "../store";
-import { expContainerAttr, onEditExpContainerAttr } from "../styles/styleComponents"
+import { type GeneralInfoTemplate } from "../utils/store";
+import {
+  expContainerAttr,
+  onEditExpContainerAttr,
+} from "../styles/styleComponents";
 
 interface Props {
-  submitState: boolean,
-  storeValues: GeneralInfoTemplate,
-  submitInputs: React.Dispatch<React.SetStateAction<GeneralInfoTemplate>>,
+  submitState: boolean;
+  storeValues: GeneralInfoTemplate;
+  submitInputs: React.Dispatch<React.SetStateAction<GeneralInfoTemplate>>;
 }
 export function GeneralInfo(props: Props) {
-  const [userInputs, setUserInputs] = React.useState({...props.storeValues});
+  const [userInputs, setUserInputs] = React.useState({ ...props.storeValues });
   const { firstName, lastName, email, phone } = userInputs;
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setUserInputs((prev) => ({ ...prev, [id]: value }));
   };
   useEffect(() => {
-    props.submitInputs(prev => Object.assign(prev, userInputs));
-  }, [props.submitState])
+    props.submitInputs((prev) => Object.assign(prev, userInputs));
+  }, [props.submitState]);
 
   return (
-    <Container {...props.submitState ? expContainerAttr : onEditExpContainerAttr}>
+    <Container
+      {...(props.submitState ? expContainerAttr : onEditExpContainerAttr)}
+    >
       <Flex gap={8}>
         <Box flexGrow="1">
           <FormLabel htmlFor="firstName">First Name</FormLabel>

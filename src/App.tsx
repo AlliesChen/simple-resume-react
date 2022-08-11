@@ -22,7 +22,7 @@ import {
   type EducationExpInfoTemplate,
   type PracticalExpInfoTemplate,
   type UserInfo,
-} from "./store";
+} from "./utils/store";
 import GitHubIcon from "./assets/GitHub-Mark-64px.png";
 
 function App() {
@@ -38,22 +38,26 @@ function App() {
     PracticalExpInfoTemplate[]
   >([...practicalExps]);
 
-  const EducationExps = educationExps.map(info => {
+  const EducationExps = educationExps.map((info, index) => {
     return (
-    <EducationalExp
-      key={info.key}
-      submitState={isSubmit}
-      storeValues={info}
-      setInputs={setUserInputEducationExps}
-      setAppUserData={setUserData}
-    ></EducationalExp>
-  )
-});
+      <EducationalExp
+        key={info.key}
+        index={index}
+        length={educationExps.length}
+        submitState={isSubmit}
+        storeValues={info}
+        setInputs={setUserInputEducationExps}
+        setAppUserData={setUserData}
+      ></EducationalExp>
+    );
+  });
 
-  const PracticalExps = practicalExps.map(info => {
+  const PracticalExps = practicalExps.map((info, index) => {
     return (
       <PracticalExp
         key={info.key}
+        index={index}
+        length={practicalExps.length}
         submitState={isSubmit}
         storeValues={info}
         setInputs={setUserInputPracticalExps}
@@ -118,7 +122,7 @@ function App() {
         colorScheme={isSubmit ? "yellow" : "green"}
         onClick={() => setIsSubmit(!isSubmit)}
       >
-        {isSubmit ? "Edit" : "Submit"}
+        {isSubmit ? "Edit" : "Save"}
       </Button>
       <Box
         display="flex"
@@ -134,7 +138,9 @@ function App() {
         >
           <Flex>
             <Image boxSize="24px" src={GitHubIcon} alt="github icon"></Image>
-            <Text ml={1} as="i" >AlliesChen@GitHub</Text>
+            <Text ml={1} as="i">
+              AlliesChen@GitHub
+            </Text>
           </Flex>
         </Link>
       </Box>
