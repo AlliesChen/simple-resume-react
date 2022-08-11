@@ -113,9 +113,10 @@ export function EducationalExp(props: Props) {
           />
           <Spacer />
           <DeleteExpButton 
-            setInputs={props.setInputs}
-            template="EducationExp"
+            block="educationExps"
             blockIndex={userInputs.index}
+            setInputs={props.setInputs}
+            setAppUserData={props.setAppUserData}
           ></DeleteExpButton>
         </Flex>
       )}

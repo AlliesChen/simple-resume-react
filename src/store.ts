@@ -1,4 +1,5 @@
 import fp from "lodash";
+import { nanoid } from "nanoid"
 
 const _generalInfoTemplate = {
   firstName: "",
@@ -8,6 +9,7 @@ const _generalInfoTemplate = {
 };
 
 const _educationalExpTemplate = {
+  key: nanoid(),
   index: 0,
   school: "",
   study: "",
@@ -16,6 +18,7 @@ const _educationalExpTemplate = {
 };
 
 const _praticalExpTemplate = {
+  key: nanoid(),
   index: 0,
   company: "",
   position: "",
@@ -27,6 +30,7 @@ const _praticalExpTemplate = {
 type GeneralInfoTemplate = typeof _generalInfoTemplate;
 type EducationExpInfoTemplate = typeof _educationalExpTemplate;
 type PracticalExpInfoTemplate = typeof _praticalExpTemplate;
+
 type UserInputs = GeneralInfoTemplate | EducationExpInfoTemplate | PracticalExpInfoTemplate;
 
 interface UserInfo {
@@ -115,14 +119,18 @@ const StoreData = (function () {
 
   function getEducationExpTemplate(this: typeof StoreData) {
     const appData = this.get();
-    const newIndex = appData.educationExps.length;
-    return Object.assign({}, _educationalExpTemplate, {index: newIndex});
+    const newIndex = {index: appData.educationExps.length};
+    const newKey = {key: nanoid()}
+    const newExp: EducationExpInfoTemplate = Object.assign({}, _educationalExpTemplate, newIndex, newKey);
+    return newExp
   }
 
   function getPracticalExpTemplate(this: typeof StoreData) {
     const appData = this.get();
-    const newIndex = appData.practicalExps.length;
-    return Object.assign({}, _praticalExpTemplate, {index: newIndex});
+    const newIndex = {index: appData.practicalExps.length};
+    const newKey = {key: nanoid()}
+    const newExp: PracticalExpInfoTemplate = Object.assign({}, _praticalExpTemplate, newIndex, newKey)
+    return newExp
   }
 
   return { get, set, getEducationExpTemplate, getPracticalExpTemplate }

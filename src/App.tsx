@@ -38,25 +38,29 @@ function App() {
     PracticalExpInfoTemplate[]
   >([...practicalExps]);
 
-  const EducationExps = educationExps.map((info, index) => (
+  const EducationExps = educationExps.map(info => {
+    return (
     <EducationalExp
-      key={index}
+      key={info.key}
       submitState={isSubmit}
       storeValues={info}
       setInputs={setUserInputEducationExps}
       setAppUserData={setUserData}
     ></EducationalExp>
-  ));
+  )
+});
 
-  const PracticalExps = practicalExps.map((info, index) => (
-    <PracticalExp
-      key={index}
-      submitState={isSubmit}
-      storeValues={info}
-      setInputs={setUserInputPracticalExps}
-      setAppUserData={setUserData}
-    ></PracticalExp>
-  ));
+  const PracticalExps = practicalExps.map(info => {
+    return (
+      <PracticalExp
+        key={info.key}
+        submitState={isSubmit}
+        storeValues={info}
+        setInputs={setUserInputPracticalExps}
+        setAppUserData={setUserData}
+      ></PracticalExp>
+    );
+  });
 
   useEffect(() => {
     if (isSubmit) {
@@ -65,7 +69,6 @@ function App() {
         educationExps: fp.cloneDeep(userInputEducationExps),
         practicalExps: fp.cloneDeep(userInputPracticalExps),
       };
-      console.log(userInputData);
       StoreData.set(userInputData);
       setUserData(StoreData.get());
     }
@@ -89,13 +92,21 @@ function App() {
         ></GeneralInfo>
         {EducationExps}
         {isSubmit === false && (
-          <AppendExpButton setAppUserData={setUserData} template="EducationExp">
+          <AppendExpButton
+            template="EducationExp"
+            setInputs={setUserInputEducationExps}
+            setAppUserData={setUserData}
+          >
             + Add New Education Experience
           </AppendExpButton>
         )}
         {PracticalExps}
         {isSubmit === false && (
-          <AppendExpButton setAppUserData={setUserData} template="PracticalExp">
+          <AppendExpButton
+            template="PracticalExp"
+            setInputs={setUserInputPracticalExps}
+            setAppUserData={setUserData}
+          >
             + Add New Work Experience
           </AppendExpButton>
         )}

@@ -13,13 +13,14 @@ import {
 } from "@chakra-ui/react";
 import { DeleteIcon } from "@chakra-ui/icons";
 import { type UserInfo } from "../store";
-import fp from "lodash";
 
 type UserInfoKeys = Exclude<keyof UserInfo, "generalInfo">;
+
 interface Props<T> {
-  template: "EducationExp" | "PracticalExp";
+  block: UserInfoKeys;
   blockIndex: number;
   setInputs: React.Dispatch<React.SetStateAction<T>>;
+  setAppUserData: React.Dispatch<React.SetStateAction<UserInfo>>;
 }
 
 export function DeleteExpButton<T extends UserInfo[UserInfoKeys]>(
@@ -28,19 +29,30 @@ export function DeleteExpButton<T extends UserInfo[UserInfoKeys]>(
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = React.useRef<HTMLButtonElement>(null);
 
+  function mutateExps(arr: T): void {
+    arr.splice(props.blockIndex, 1)
+    let i = 0;
+    for (const item of arr) {
+      item.index = i;
+      i += 1;
+    }
+    console.log("After mutateExps: ");  
+    console.log(JSON.stringify(arr))
+  }
+
   function deleteExpBlock() {
-    props.setInputs((prev) => {
-      const newData = fp.cloneDeep(prev);
-      newData.splice(props.blockIndex, 1);
-      let i = 0;
-      for (const item of newData) {
-        item.index = i;
-        i += 1;
-      }
-      console.log(newData);
-      return newData;
-    });
-    onClose();
+    new Promise(resolved => {
+      const newData = {}
+      props.setAppUserData((prev) => {
+        const newAppData = Object.assign(newData, prev);
+        mutateExps(newAppData[props.block] as T)
+        return newAppData
+      });
+      resolved(newData);
+    }).then(newData => {
+      props.setInputs(Reflect.get(newData as UserInfo, props.block));
+    })
+    onClose()
   }
 
   return (

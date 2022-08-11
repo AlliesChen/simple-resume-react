@@ -28,7 +28,6 @@ interface Props {
 
 export function PracticalExp(props: Props) {
   const [userInputs, setUserInputs] = React.useState({ ...props.storeValues });
-  const { company, position, job, from, end } = userInputs;
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -37,17 +36,19 @@ export function PracticalExp(props: Props) {
   };
 
   useEffect(() => {
-    const userInputPracticalExp: PracticalExpInfoTemplate = Object.assign(
-      {},
-      userInputs
-    );
-    props.setInputs((prev) =>
-      prev.map((item: PracticalExpInfoTemplate) =>
-        item.index === userInputPracticalExp.index
-          ? userInputPracticalExp
-          : item
-      )
-    );
+    if (props.submitState) {
+      const userInputPracticalExp: PracticalExpInfoTemplate = Object.assign(
+        {},
+        userInputs
+      );
+      props.setInputs((prev) =>
+        prev.map((item: PracticalExpInfoTemplate) =>
+          item.index === userInputPracticalExp.index
+            ? userInputPracticalExp
+            : item
+        )
+      );
+    }
   }, [props.submitState]);
 
   return (
@@ -61,7 +62,7 @@ export function PracticalExp(props: Props) {
         id="company"
         type="text"
         isDisabled={props.submitState ? true : false}
-        value={company}
+        value={userInputs.company}
         onChange={handleInputChange}
       />
       <FormLabel htmlFor="position">Position Title</FormLabel>
@@ -70,7 +71,7 @@ export function PracticalExp(props: Props) {
         id="position"
         type="text"
         isDisabled={props.submitState ? true : false}
-        value={position}
+        value={userInputs.position}
         onChange={handleInputChange}
       />
       <FormLabel htmlFor="job">Job Description</FormLabel>
@@ -78,7 +79,7 @@ export function PracticalExp(props: Props) {
         placeholder="main tasks of your job"
         id="job"
         isDisabled={props.submitState ? true : false}
-        value={job}
+        value={userInputs.job}
         onChange={handleInputChange}
       />
       <Flex gap={8}>
@@ -89,7 +90,7 @@ export function PracticalExp(props: Props) {
             id="from"
             type="date"
             isDisabled={props.submitState ? true : false}
-            value={from}
+            value={userInputs.from}
             onChange={handleInputChange}
           />
         </Box>
@@ -100,7 +101,7 @@ export function PracticalExp(props: Props) {
             id="end"
             type="date"
             isDisabled={props.submitState ? true : false}
-            value={end}
+            value={userInputs.end}
             onChange={handleInputChange}
           />
         </Box>
@@ -124,9 +125,10 @@ export function PracticalExp(props: Props) {
           />
           <Spacer />
           <DeleteExpButton
-            setInputs={props.setInputs}
-            template="PracticalExp"
+            block="practicalExps"
             blockIndex={userInputs.index}
+            setInputs={props.setInputs}
+            setAppUserData={props.setAppUserData}
           ></DeleteExpButton>
         </Flex>
       )}
