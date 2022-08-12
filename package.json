@@ -2,6 +2,7 @@
   "name": "simple-resume-react",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://allieschen.github.io/simple-resume-react",
   "dependencies": {
     "@chakra-ui/icons": "^2.0.6",
     "@chakra-ui/react": "^2.2.6",
@@ -27,7 +28,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
@@ -46,5 +49,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "gh-pages": "^4.0.0"
   }
 }

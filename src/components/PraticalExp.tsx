@@ -88,6 +88,7 @@ export function PracticalExp(props: Props) {
         isDisabled={props.submitState ? true : false}
         value={company}
         onChange={handleInputChange}
+        autoComplete="new-company"
       />
       <FormLabel htmlFor="position">Position Title</FormLabel>
       <Input
@@ -97,6 +98,7 @@ export function PracticalExp(props: Props) {
         isDisabled={props.submitState ? true : false}
         value={position}
         onChange={handleInputChange}
+        autoComplete="new-position"
       />
       <FormLabel htmlFor="job">Job Description</FormLabel>
       <Textarea
@@ -105,6 +107,7 @@ export function PracticalExp(props: Props) {
         isDisabled={props.submitState ? true : false}
         value={job}
         onChange={handleInputChange}
+        _disabled={{ opacity: "1" }}
       />
       <Flex gap={8}>
         <Box flexGrow="1">

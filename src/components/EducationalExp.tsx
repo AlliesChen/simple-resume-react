@@ -85,6 +85,7 @@ export function EducationalExp(props: Props) {
         isDisabled={props.submitState ? true : false}
         value={school}
         onChange={handleInputChange}
+        autoComplete="new-school"
       />
       <FormLabel htmlFor="study">Title of Study</FormLabel>
       <Input
@@ -94,6 +95,7 @@ export function EducationalExp(props: Props) {
         isDisabled={props.submitState ? true : false}
         value={study}
         onChange={handleInputChange}
+        autoComplete="new-study"
       />
       <Flex gap={8}>
         <Box flexGrow="1">
